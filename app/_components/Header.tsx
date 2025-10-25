@@ -1,7 +1,11 @@
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React from "react";
+import { authOptions } from "../_utils/ProviderOptions";
+import Dropdown from "./dropDown";
 
-function Header() {
+async function Header() {
+   const session = await getServerSession(authOptions);
   return (
     <>
       <header className="bg-white shadow-md ">
@@ -49,6 +53,7 @@ function Header() {
             </nav>
 
             <div className="flex items-center gap-4">
+              {session ? <Dropdown/> :
               <div className="sm:flex sm:gap-4">
                 <Link
                   className="block rounded-md bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-sky-700"
@@ -63,7 +68,7 @@ function Header() {
                 >
                   Register
                 </Link>
-              </div>
+              </div>}
 
               <button className="block rounded-sm bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden">
                 <span className="sr-only">Toggle menu</span>
