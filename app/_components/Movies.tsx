@@ -1,0 +1,54 @@
+import React from "react";
+import Link from "next/link";
+import { getMovies } from "../_utils/MoviesApis";
+
+interface Movie {
+  vote_average: number;
+  title: string;
+  media_type: string;
+  id: number;
+  poster_path: string;
+}
+
+export default async function Movies() {
+  const data = await getMovies();
+  const trendingMovies: Movie[] = data.results;
+  return (
+    <div className="grid grid-cols-4  gap-4 p-6">
+      {/* Left Sidebar (1 column) */}
+      <div className="col-span-1    p-6 ">
+        <div className="w-[150px] bg-black h-0.5"></div>
+        <div className="py-4">
+          <h3 className="text-xl font-bold">
+            Trending Movies <br /> To Watch <br /> Right Now
+          </h3>
+          <p className="text-sm mt-2 text-gray-700">
+            Most Watched Movies By Days
+          </p>
+        </div>
+        <div className="w-full bg-black h-0.5"></div>
+      </div>
+
+      {/* Movies Grid (3 columns) */}
+      <div className="col-span-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {trendingMovies.map((movie, index) => (
+          <div className="relative" key={index}>
+            <Link href={`/TrendingDetails/${movie.id}/${movie.media_type}`}     >
+              <div className="movie">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  className="w-full rounded"
+                  alt={movie.title}
+                />
+                <h4 className="text-sm mt-2">{movie.title}</h4>
+                <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-2 py-1 rounded-bl">
+                  {movie.vote_average.toFixed(1)}
+                </div>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
